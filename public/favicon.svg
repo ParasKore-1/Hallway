@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .door { fill: #1e4a41; }
+    .knob { fill: #e3b66b; }
+    @media (prefers-color-scheme: dark) { .door { fill: #8ccbb5; } }
+  </style>
+  <path class="door" d="M6 30V14a10 10 0 0 1 20 0v16z"/>
+  <circle class="knob" cx="20.5" cy="20" r="1.75"/>
+</svg>

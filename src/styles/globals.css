@@ -1,0 +1,412 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './fonts.css';
+
+/*
+ * No `dark:` variant on purpose: every colour is a token that already switches per theme,
+ * so components never branch on theme. Motion/pointer variants are what we need instead.
+ */
+@custom-variant motion-ok (@media (prefers-reduced-motion: no-preference));
+@custom-variant fine-pointer (@media (pointer: fine));
+
+/*
+ * Tailwind theme reads from the token layer. `inline` makes utilities emit var(--hw-*)
+ * directly so a theme switch is a pure custom-property swap.
+ * Default palettes are cleared so only brand tokens are available.
+ */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-bg: var(--hw-bg);
+  --color-surface: var(--hw-surface);
+  --color-surface-2: var(--hw-surface-2);
+  --color-ink: var(--hw-ink);
+  --color-ink-muted: var(--hw-ink-muted);
+  --color-line: var(--hw-line);
+  --color-accent: var(--hw-accent);
+  --color-accent-hover: var(--hw-accent-hover);
+  --color-on-accent: var(--hw-on-accent);
+  --color-danger: var(--hw-danger);
+  --color-success: var(--hw-success);
+  --color-brass: var(--hw-brass);
+  --color-brass-soft: var(--hw-brass-soft);
+  --color-focus: var(--hw-focus);
+
+  --font-*: initial;
+  --font-display: var(--hw-font-display);
+  --font-sans: var(--hw-font-sans);
+  --font-mono: var(--hw-font-mono);
+
+  --text-*: initial;
+  --text-xs: var(--hw-text-xs);
+  --text-xs--line-height: var(--hw-leading-xs);
+  --text-xs--letter-spacing: var(--hw-tracking-xs);
+  --text-sm: var(--hw-text-sm);
+  --text-sm--line-height: var(--hw-leading-sm);
+  --text-base: var(--hw-text-base);
+  --text-base--line-height: var(--hw-leading-base);
+  --text-lg: var(--hw-text-lg);
+  --text-lg--line-height: var(--hw-leading-lg);
+  --text-lg--letter-spacing: var(--hw-tracking-lg);
+  --text-xl: var(--hw-text-xl);
+  --text-xl--line-height: var(--hw-leading-xl);
+  --text-xl--letter-spacing: var(--hw-tracking-xl);
+  --text-2xl: var(--hw-text-2xl);
+  --text-2xl--line-height: var(--hw-leading-2xl);
+  --text-2xl--letter-spacing: var(--hw-tracking-2xl);
+  --text-3xl: var(--hw-text-3xl);
+  --text-3xl--line-height: var(--hw-leading-3xl);
+  --text-3xl--letter-spacing: var(--hw-tracking-3xl);
+  --text-display: var(--hw-text-display);
+  --text-display--line-height: var(--hw-leading-display);
+  --text-display--letter-spacing: var(--hw-tracking-display);
+  --text-metric: var(--hw-text-metric);
+  --text-metric--line-height: var(--hw-leading-metric);
+  --text-metric--letter-spacing: var(--hw-tracking-metric);
+
+  --tracking-eyebrow: var(--hw-tracking-eyebrow);
+
+  --spacing: var(--hw-space-unit);
+  --spacing-gutter: var(--hw-gutter);
+  --spacing-section: var(--hw-section-y);
+  --container-page: var(--hw-container-max);
+  --container-prose: var(--hw-container-prose);
+
+  --radius-*: initial;
+  --radius-xs: var(--hw-radius-xs);
+  --radius-sm: var(--hw-radius-sm);
+  --radius-md: var(--hw-radius-md);
+  --radius-lg: var(--hw-radius-lg);
+  --radius-pill: var(--hw-radius-pill);
+  --radius-arch: var(--hw-radius-arch);
+
+  --shadow-*: initial;
+  --shadow-xs: var(--hw-shadow-xs);
+  --shadow-sm: var(--hw-shadow-sm);
+  --shadow-md: var(--hw-shadow-md);
+  --shadow-lg: var(--hw-shadow-lg);
+  --shadow-focus: var(--hw-shadow-focus);
+
+  --ease-*: initial;
+  --ease-standard: var(--hw-ease-standard);
+  --ease-out-expo: var(--hw-ease-out-expo);
+  --ease-in-out-quart: var(--hw-ease-in-out-quart);
+  --ease-emphasized: var(--hw-ease-emphasized);
+
+  --animate-*: initial;
+}
+
+/* Breakpoints are static (not runtime-themable), so they live in a plain @theme block. */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 23.4375rem; /* 375 */
+  --breakpoint-md: 48rem; /* 768 */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-xl: 80rem; /* 1280 */
+  --breakpoint-2xl: 90rem; /* 1440 */
+  --breakpoint-3xl: 120rem; /* 1920 */
+}
+
+@layer base {
+  html {
+    background-color: var(--hw-bg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--hw-bg);
+    color: var(--hw-ink);
+    font-family: var(--hw-font-sans);
+    font-size: var(--hw-text-base);
+    line-height: var(--hw-leading-base);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--hw-font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  figcaption,
+  blockquote {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--hw-brass-soft);
+    color: var(--hw-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--hw-focus);
+    outline-offset: 3px;
+    border-radius: var(--hw-radius-xs);
+  }
+
+  /* Programmatic focus targets (main, page h1) should not show a ring. */
+  [tabindex='-1']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer base {
+  /* Nested theme scopes (e.g. playground panels) paint their own surface. */
+  [data-theme]:not(:root) {
+    background-color: var(--hw-bg);
+    color: var(--hw-ink);
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eyebrow {
+    font-family: var(--hw-font-sans);
+    font-size: var(--hw-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--hw-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--hw-brass);
+  }
+
+  /* Signature arch shape (semicircular top). */
+  .arch {
+    border-radius: var(--hw-radius-arch);
+  }
+
+  /* Underline that draws in from the left on hover/focus — transform only. */
+  .link-draw {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--hw-dur-base) var(--hw-ease-out-expo);
+  }
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after,
+  .link-draw[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .link-draw::after {
+      transition-duration: 0ms;
+    }
+  }
+
+  /* Mask for split-text reveals (display is set by the caller). Padding keeps descenders. */
+  .line-mask {
+    overflow: clip;
+    padding-block-end: 0.08em;
+    margin-block-end: -0.08em;
+  }
+}
+
+/*
+ * Skip rendering work for below-the-fold sections until they approach the viewport.
+ * Only on sections AFTER the pinned "How it works" (content above a pin must keep real
+ * heights for its scroll distance), and not on the FAQ: while skipped, its text has no layout
+ * boxes and automated contrast checks sample the accent CTA panel below instead
+ * (DECISIONS 020).
+ */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56rem;
+  @media print {
+    content-visibility: visible;
+  }
+}
+
+/* ---------- Marquee (CSS transform loop) ---------- */
+@keyframes hw-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: hw-marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+.marquee[data-paused='true'] .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .marquee-track > ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-shrink: 1;
+    row-gap: 1.5rem;
+  }
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-clone {
+    display: none;
+  }
+}
+
+/* ---------- Hero arch (signature) ----------
+ * Starting shape lives in CSS so the first paint already shows the doorway (no flash when
+ * GSAP takes over). Reduced motion: no clip — the mock is simply shown open. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-arch {
+    clip-path: inset(0% 5% 0% 5% round 900px 900px 24px 24px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  .hero-arch {
+    clip-path: inset(0% 14% 0% 14% round 900px 900px 24px 24px);
+  }
+}
+
+/* ---------- Integrations orbit ---------- */
+@keyframes hw-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hw-orbit-counter {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  .orbit-ring {
+    animation: hw-orbit 90s linear infinite;
+  }
+  .orbit-ring .orbit-upright {
+    animation: hw-orbit-counter 90s linear infinite;
+  }
+  .orbit:hover .orbit-ring,
+  .orbit:hover .orbit-upright,
+  .orbit:focus-within .orbit-ring,
+  .orbit:focus-within .orbit-upright {
+    animation-play-state: paused;
+  }
+}
+
+/* ---------- Lenis (package CSS isn't exported; rules inlined) ---------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ---------- Spinner ---------- */
+@keyframes hw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: hw-spin 0.8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+/* ---------- Preloader visibility (class set by inline script before paint) ---------- */
+html:not(.is-preloading) .preloader {
+  display: none;
+}
+html.is-preloading {
+  overflow: hidden;
+}
+@keyframes hw-pre-rise {
+  from {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+}
+@keyframes hw-pre-word {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes hw-pre-rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+.preloader-glyph {
+  animation: hw-pre-rise 450ms var(--hw-ease-out-expo) both;
+}
+.preloader-word {
+  animation: hw-pre-word 500ms var(--hw-ease-out-expo) 60ms both;
+}
+.preloader-rule {
+  animation: hw-pre-rule 650ms var(--hw-ease-in-out-quart) 80ms both;
+}
+.preloader {
+  transition: transform 300ms var(--hw-ease-in-out-quart);
+}
+html.is-preloader-leaving .preloader {
+  transform: translateY(-100%);
+}

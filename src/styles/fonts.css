@@ -1,0 +1,22 @@
+/*
+ * Metric-matched fallbacks to eliminate layout shift while the variable fonts load
+ * (font-display: swap is set by @fontsource). Overrides computed from @capsizecss/metrics
+ * (average-width ratio for size-adjust; ascent/descent rescaled) — see DECISIONS.md.
+ */
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Georgia');
+  size-adjust: 105.2%;
+  ascent-override: 92.96%;
+  descent-override: 24.24%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
